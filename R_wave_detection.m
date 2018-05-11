@@ -1,3 +1,11 @@
+clear;
+close all;
+clc;
+
+
+load('D:\Elsa\Documents\Mica\MICA_project\data\ecg_normal_1.mat')
+
+
 %% Band pass filter 
 %% creation of low pass filter 
 Ts = 1 / Fs; 
