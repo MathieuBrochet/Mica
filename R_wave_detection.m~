@@ -23,7 +23,7 @@ h2 = filter(H2_num,H2_den,h1); % out signal of the high pass filter
 Vect_caus = [ 0 0 0 0 1 ];
 Deriv_num = [-1 -2 0 2 1]; % numerator of derivative
 
-Deriv_num = conv(Vect_caus,Deriv_num); % we transform the signal in a causal signal thank to Vect_caus 
+Deriv_num = conv(Vect_caus,Deriv_num); % on rend le signal causale 
 
 h3 = filter(Deriv_num,8*Ts,h2); % derivative filter 
 
@@ -41,13 +41,13 @@ h4 = abs(h3); % taking the absolute value of the h3
 
 %% Moving Window Integration 
 
-h = ones(1,30)/30; % creation of the window 
+h = ones(1,31)/31; 
 
-h5 = conv(h4,h); % apply the window to the signal h4 
+conv
 
-h5 = h5 / max(abs(h5)); % normalisation of the signal h5 
 
-%plot(h5);
+
+
 %% thresholding 
 
 
