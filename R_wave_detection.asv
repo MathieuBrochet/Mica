@@ -92,18 +92,41 @@ mult1 = data(1:length(p)).*p;
 pks(pks < 0) = 0;
 
 
-R_value = pks(pks > 0); % value of R peak abcsissa 
+R_value = abscisse(pks > 0); % value of R peak abcsissa 
+% R_value is the abscissa of R peaks and pks are the ordinates of R peaks
+
+
 
 %% Q and S wave detection
-figure(56);
-plot(data);
+
+
+% figure(2);
+% plot(data);
 
 deriv_data = diff(data);
-for i=1:length(data)
-    for j=R_value(i)
-    if deriv_data
-     S_value(i) =  
-end
+
+% figure(3);
+% plot(deriv_data);
+
+
+
+
+[pks1, abscisse1] = findpeaks(-data);
+
+S_value = zeros(length(R_value));
+Q_value = zeros(length(R_value));
+
+for i=1:length(R_value)
+    j = 0;
+    while abcsisse1(j) < R_value(i)
+        j=j+1;
+    end;
+    S_value(i) = abcisse(j);
+    Q_value(i) = abcsisse(j-1);
+end;
+
+
+
 
 
 %% P and T wave detection
