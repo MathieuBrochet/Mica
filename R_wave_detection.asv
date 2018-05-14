@@ -92,24 +92,18 @@ mult1 = data(1:length(p)).*p;
 pks(pks < 0) = 0;
 
 
-R_value = abscisse(pks > 0); % value of R peak abcsissa 
+R_value = pks(pks > 0); % value of R peak abcsissa 
 
 %% Q and S wave detection
-figure(2);
+figure(56);
 plot(data);
 
 deriv_data = diff(data);
-figure(3);
-plot(deriv_data);
-% for i=1:length(data)
-%     for j=R_value(i):(R_value(i)+10)
-%         if deriv_data(j)==0
-%             S_abs = j;
-%             break;
-%         end;
-%      S_value(i) = S_abs;
-%     end;      
-% end
+for i=1:length(data)
+    for j=R_value(i)
+    if deriv_data
+     S_value(i) =  
+end
 
 
 %% P and T wave detection
