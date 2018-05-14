@@ -100,8 +100,8 @@ R_value = abscisse(pks > 0); % value of R peak abcsissa
 %% Q and S wave detection
 
 
-figure(2);
-plot(data);
+% figure(2);
+% plot(data);
 
 deriv_data = diff(data);
 
@@ -130,6 +130,49 @@ end;
 
 
 %% P and T wave detection
+
+
+G1 = [ 1 0 0 0 0 0 -1 ];   % delay = 3
+
+g1 = filter(G1,1,data);   % First filter
+
+
+G2_num = [ 1 0 0 0 0 0 0 0 -1 ];
+G2_den = [ 1 0 -1 ];                 % delay = 3
+
+g2 = filter(G2_num, G2_den, g1);  % Second filter
+
+
+
+delay2 = [0 0 0 0 0 0 1];
+data = conv(data,delay2);   % correction of the 2 filters delays
+
+% figure(5);
+% plot(data);
+% hold all; 
+% plot(g1);
+% 
+figure(6);
+plot(data);
+hold all; 
+plot(g2);
+grid on; 
+
+
+
+for p=1:length(R_value)-1
+    k=1;
+    j=R_value(p);
+    while j < R_value(p)+0.7*(R_value(p+1)-R_value(p))
+        if g2(j)*g2(j+1) < 0
+            t_vect(k)=j;
+            k=k+1;
+        end
+        j=j+1;
+    end;
+    %T_value(i)=max(t_vect);
+end;
+
 
 
 %% 
