@@ -1,16 +1,16 @@
-
-clear; 
-close all; 
-clc;
-
-
-%% Load a signal
-[file,path] = uigetfile('*.mat', 'rt');
-signal = load(fullfile(path, file));
-data = signal.ecg; % Your ecg data
-Fs = signal.Fs; % Sampling frequency
-N = size(data,2); % Data length
-time_axis = (1:N)/Fs;
+function [R_value] = R_wave_detection( data, Fs)
+% clear; 
+% close all; 
+% clc;
+% 
+% 
+% %% Load a signal
+% [file,path] = uigetfile('*.mat', 'rt');
+% signal = load(fullfile(path, file));
+% data = signal.ecg; % Your ecg data
+% Fs = signal.Fs; % Sampling frequency
+% N = size(data,2); % Data length
+% time_axis = (1:N)/Fs;
 
 %% Band pass filter 
 %% creation of low pass filter 
@@ -75,11 +75,11 @@ h5_moy = h5_moy / length(h5);
 tresh = h5_moy;
 p = (h5 > tresh);
 
-figure(1);
-plot(h5);
-hold all;
-plot(1e13*p);
-
+% figure(1);
+% plot(h5);
+% hold all;
+% plot(1e13*p);
+% 
 
 
 %% detection of maxima
@@ -150,11 +150,11 @@ data = conv(data,delay2);   % correction of the 2 filters delays
 % hold all; 
 % plot(g1);
 % 
-figure(6);
-plot(data);
-hold all; 
-plot(g2);
-grid on; 
+% figure(6);
+% plot(data);
+% hold all; 
+% plot(g2);
+% grid on; 
 
 
 
@@ -217,3 +217,4 @@ for p=2:length(R_value)
 end;
 
 
+end
