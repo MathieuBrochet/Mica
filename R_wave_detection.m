@@ -156,22 +156,59 @@ for p=1:length(R_value)-1
     k=1;
     j=R_value(p);
     t_vect=[];
-    while j < R_value(p)+0.7*(R_value(p+1)-R_value(p))
+ 
+    
+    % T_values
+    
+    while j < R_value(p)+0.7*(R_value(p+1)-R_value(p)) % value between R and 0.7*R-R'
         if g2(j)*g2(j+1) < 0
             t_vect(k) = 0;
-            t_vect(k)=j;
+            t_vect(k)=j;   % t_vect contain all the zeros of g2
             k=k+1;
         end
         j=j+1;
     end;
+    
     max_ord = max(data(t_vect(2:length(t_vect))));
-    for m = 1:length(t_vect)
+    
+    for m = 1:length(t_vect)                            % max value in data of the zeros 
         if data(t_vect(m))==max_ord
             T_value(p)=t_vect(m);
         end
-    end
+    end    
 end;
 
+
+    
+    % P values 
+
+
+for p=2:length(R_value)
+    k=1;
+    j=R_value(p);
+    p_vect=[];
+ 
+    
+    % T_values
+    
+    while j > R_value(p)-0.3*(R_value(p)-R_value(p-1)) % value between R and 0.7*R-R'
+        if g2(j)*g2(j+1) < 0
+            p_vect(k) = 0;
+            p_vect(k)=j;   % t_vect contain all the zeros of g2
+            k=k+1;
+        end
+        j=j-1;
+    end;
+    
+    max_ordp = max(data(p_vect(2:length(p_vect))));
+    
+    for m = 1:length(p_vect)                            % max value in data of the zeros 
+        if data(p_vect(m))==max_ordp
+            P_value_int(p)=p_vect(m);
+        end
+    end
+    P_value = P_value_int(2:length(P_value_int));
+end;
 
 
 %% 

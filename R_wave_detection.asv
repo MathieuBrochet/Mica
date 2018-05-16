@@ -108,15 +108,9 @@ deriv_data = diff(data);
 % figure(3);
 % plot(deriv_data);
 
+[pks1, abscisse1] = findpeaks(-data); % display the pks1 and their abcissa 
 
-
-
-[pks1, abscisse1] = findpeaks(-data);
-
-
-
-
-for i=1:length(R_value)
+for i=1:length(R_value) 
     j = 1;
     while abscisse1(j) < R_value(i)
         j=j+1;
@@ -126,10 +120,8 @@ for i=1:length(R_value)
 end;
 
 
-
-
-
 %% P and T wave detection
+
 
 
 G1 = [ 1 0 0 0 0 0 -1 ];   % delay = 3
@@ -164,19 +156,52 @@ for p=1:length(R_value)-1
     k=1;
     j=R_value(p);
     t_vect=[];
-    while j < R_value(p)+0.7*(R_value(p+1)-R_value(p))
+ 
+    
+    % T_values
+    
+    while j < R_value(p)+0.7*(R_value(p+1)-R_value(p)) % value between R and 0.7*R-R'
         if g2(j)*g2(j+1) < 0
             t_vect(k) = 0;
-            t_vect(k)=j;
+            t_vect(k)=j;   % t_vect contain all the zeros of g2
             k=k+1;
         end
         j=j+1;
     end;
-    for m = 1:length(t_vect)
-        max_ord = ma
-    T_value(p)=max(data((t_vect)));
+    
+    max_ord = max(data(t_vect(2:length(t_vect))));
+    
+    for m = 1:length(t_vect)                            % max value in data of the zeros 
+        if data(t_vect(m))==max_ord
+            T_value(p)=t_vect(m);
+        end
+    end    
 end;
 
+
+    
+    % P values 
+    
+for p=1:length(R_value)-1
+    k=1;
+    j=R_value(p);
+    t_vect=[];
+    p_vect=[];
+    while j < R_value(p+1)
+        if g2(j)*g2(j+1) < 0
+            p_vect(k) = 0;
+            p_vect(k)=j;   % t_vect contain all the zeros of g2
+            k=k+1;
+        end
+    end
+    max_ordp = max(data(p_vect(2:length(p_vect))));
+    for n = 1:length(p_vect)                            % max value in data of the zeros 
+        if data(p_vect(n))==max_ordp
+            P_value(p)=p_vect(n);
+        end
+    end
+    
+    
 
 
 %% 
