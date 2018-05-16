@@ -108,15 +108,9 @@ deriv_data = diff(data);
 % figure(3);
 % plot(deriv_data);
 
+[pks1, abscisse1] = findpeaks(-data); % display the pks1 and their abcissa 
 
-
-
-[pks1, abscisse1] = findpeaks(-data);
-
-
-
-
-for i=1:length(R_value)
+for i=1:length(R_value) 
     j = 1;
     while abscisse1(j) < R_value(i)
         j=j+1;
@@ -126,10 +120,8 @@ for i=1:length(R_value)
 end;
 
 
-
-
-
 %% P and T wave detection
+
 
 
 G1 = [ 1 0 0 0 0 0 -1 ];   % delay = 3
