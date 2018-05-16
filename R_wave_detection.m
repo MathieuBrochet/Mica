@@ -211,10 +211,13 @@ for p=2:length(R_value)
 end;
 
 
+<<<<<<< HEAD
 %test
 
 %% 
 
 
 
+=======
+>>>>>>> master
 
