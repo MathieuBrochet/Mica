@@ -172,12 +172,9 @@ for p=1:length(R_value)-1
         end
         j=j+1;
     end;
-    max_ord = max(data(t_vect(2:length(t_vect))));
     for m = 1:length(t_vect)
-        if data(t_vect(m))==max_ord
-            T_value(p)=t_vect(m);
-        end
-    end
+        max_ord = ma
+    T_value(p)=max(data((t_vect)));
 end;
 
 
