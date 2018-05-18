@@ -4,7 +4,7 @@ function [R_value] = R_wave_detection( data, Fs)
 % clc;
 % 
 % 
-% %% Load a signal
+%% Load a signal
 % [file,path] = uigetfile('*.mat', 'rt');
 % signal = load(fullfile(path, file));
 % data = signal.ecg; % Your ecg data
@@ -79,10 +79,11 @@ p = (h5 > tresh);
 
 
 
-figure(1);
-plot(h5);
-hold all;
-plot(1e13*p);
+% figure(1);
+% plot(h5);
+% hold all;
+% plot(data*10^12);
+% plot(1e13*p);
 
 
 
@@ -147,7 +148,7 @@ g2 = filter(G2_num, G2_den, g1);  % Second filter
 
 
 delay2 = [0 0 0 0 0 0 1];
-data = conv(data,delay2);   % correction of the 2 filters delays
+data2 = conv(data,delay2);   % correction of the 2 filters delays
 
 % figure(5);
 % plot(data);
