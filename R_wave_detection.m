@@ -72,14 +72,18 @@ end
 
 
 h5_moy = h5_moy / length(h5);
-tresh = h5_moy;
+ tresh = h5_moy;
+%  plot(h5_moy);
+% tresh_test =3*10^12;
 p = (h5 > tresh);
 
-% figure(1);
-% plot(h5);
-% hold all;
-% plot(1e13*p);
-% 
+
+
+figure(1);
+plot(h5);
+hold all;
+plot(1e13*p);
+
 
 
 %% detection of maxima
@@ -214,7 +218,6 @@ for p=2:length(R_value)
         end
     end
     P_value = P_value_int(2:length(P_value_int));
-end;
-
+end
 
 end
