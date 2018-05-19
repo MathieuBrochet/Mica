@@ -5,18 +5,25 @@ clc;
 
 
 %% Load a signal
+
+
 [file,path] = uigetfile('*.mat', 'rt');
 signal = load(fullfile(path, file));
 data = signal.ecg; % Your ecg data
 Fs = signal.Fs; % Sampling frequency
 N = size(data,2); % Data length
 time_axis = (1:N)/Fs;
-R_value = R_wave_detection( data, Fs);
+[R_value, Q_value, S_value, P_value, T_value] = R_wave_detection( data, Fs); % récupération des valeurs PQRST précédentes
+
+
+
 %% Rythm cardiac
+
+
 delay = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0  0 1]; 
 data = conv(delay,data);
- % obligé de remettre le delais car 
-%on load de nouveau le signal data avec un delais par rapport à nos signaux de filtre 
+% obligé de remettre le delais car 
+% on load de nouveau le signal data avec un delais par rapport à nos signaux de filtre 
 
 sumR = 0;
 for i=1:length(R_value)-1
@@ -68,7 +75,7 @@ cunter_e_beat= length(Ectopic_beat);  % le nombre de ectopic beat
 percent_of_extopic_beat = cunter_e_beat *100 / length(R_R); % le pourcentage d'ectopic beat 
 
 
-%% Fibrillation 
+%%  Atrial Fibrillation 
 N=length(R_R);
 auto_cov_fibr_k1=0;
 auto_cov_fibr_k2=0;
@@ -88,19 +95,17 @@ for k=1:N-1
 %  dirac , car les signaux ecarté d'une periode se ressemble --> ils
 %  possède un lien important entre eux = autocorélation qui ne fluctue pas
 %  trop 
-%  
 %  par ailleur si un signal à une autocovariance de type dirac, alors le
 %  signal a pas de lien entre les signaux qui se suivent et donc, le signal
 %  fluctue beaucoup entre chaque batement, pas de lien == fibrillation
 %  =malade 
-% 
-
 % % importer les P_values, si
 % % length(P_value) ont des toutes petits values ( seuil à déterminer) alors
 % % on peut dire qu'il y a abscence de P_value et donc par suite si 
-% 
-% 
-% 
+P_value_real = P
+
+
+
  %% Ventricular fibrillation 
 % % absence of traditional P Q R S T waves , 
 % 
@@ -191,3 +196,5 @@ for i = 1:length(BPM_sans_zero)
 end
 
 BPM_average = BPM_average / length(BPM_sans_zero); % on calcul la moyenne des bpm du signal fenetré 
+% on devrait retrouver la meme moyenne que bpm 
+

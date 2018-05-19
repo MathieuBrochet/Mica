@@ -75,7 +75,7 @@ cunter_e_beat= length(Ectopic_beat);  % le nombre de ectopic beat
 percent_of_extopic_beat = cunter_e_beat *100 / length(R_R); % le pourcentage d'ectopic beat 
 
 
-%% Fibrillation 
+%%  Atrial Fibrillation 
 N=length(R_R);
 auto_cov_fibr_k1=0;
 auto_cov_fibr_k2=0;
@@ -95,19 +95,26 @@ for k=1:N-1
 %  dirac , car les signaux ecarté d'une periode se ressemble --> ils
 %  possède un lien important entre eux = autocorélation qui ne fluctue pas
 %  trop 
-%  
 %  par ailleur si un signal à une autocovariance de type dirac, alors le
 %  signal a pas de lien entre les signaux qui se suivent et donc, le signal
 %  fluctue beaucoup entre chaque batement, pas de lien == fibrillation
 %  =malade 
-% 
-
 % % importer les P_values, si
 % % length(P_value) ont des toutes petits values ( seuil à déterminer) alors
 % % on peut dire qu'il y a abscence de P_value et donc par suite si 
-% 
-% 
-% 
+P_value_real = P_value( P_value >0);
+nb_p_values = length(P_value);
+nb_p_values_real = length(P_value_real);
+
+perc_of_p_value = (nb_p_values_real/nb_p_values)*100;
+
+% on peut ainsi determiner le nombre de P_values dans le signal 
+% s'il y en a pas beaucoup , alors l'autre condition pour certifié une AF
+% est validé : 
+% présence d'un AF 
+
+
+
  %% Ventricular fibrillation 
 % % absence of traditional P Q R S T waves , 
 % 
@@ -124,17 +131,13 @@ N_value = length(data);
 for f=4:10 % bpm 240 to 600
     comparaison_signal = sin(2*pi*f*(0:N_value-1)/Fs); % pure sine
 end
-% 
-% 
-% 
+
 % % method de comparaison avec autocov de ecg, et auto cov de sine  
-% 
+
 y=autocorr(comparaison_signal); 
-%   
-%   
+  
 %  %determienr une periode d'analyse du signal  pour la parole c'est 10-20
 %  %ms pour 20-20kHz 
-% 
 %% releving interessant part of the signal 
 %   
 partie_entiere = floor(length(data)/2);
@@ -199,3 +202,4 @@ end
 
 BPM_average = BPM_average / length(BPM_sans_zero); % on calcul la moyenne des bpm du signal fenetré 
 % on devrait retrouver la meme moyenne que bpm 
+
