@@ -5,23 +5,25 @@ clc;
 
 
 %% Load a signal
+
+
 [file,path] = uigetfile('*.mat', 'rt');
 signal = load(fullfile(path, file));
 data = signal.ecg; % Your ecg data
 Fs = signal.Fs; % Sampling frequency
 N = size(data,2); % Data length
 time_axis = (1:N)/Fs;
-R_value = R_wave_detection( data, Fs);
-% P_value = R_wave_detection( data, Fs); % marche pas renvoi la meme valeur
-% que R_value
-% Q_value = R_wave_detection( data, Fs);
-% T_value = R_wave_detection( data, Fs);
-% S_value = R_wave_detection( data, Fs);
+[R_value, Q_value, S_value, P_value, T_value] = R_wave_detection( data, Fs); % récupération des valeurs PQRST précédentes
+
+
+
 %% Rythm cardiac
+
+
 delay = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0  0 1]; 
 data = conv(delay,data);
- % obligé de remettre le delais car 
-%on load de nouveau le signal data avec un delais par rapport à nos signaux de filtre 
+% obligé de remettre le delais car 
+% on load de nouveau le signal data avec un delais par rapport à nos signaux de filtre 
 
 sumR = 0;
 for i=1:length(R_value)-1

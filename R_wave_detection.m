@@ -1,4 +1,4 @@
-function [R_value] = R_wave_detection( data, Fs)
+function [R_value, Q_value, S_value, P_value, T_value, tresh] = R_wave_detection( data, Fs)
 % clear; 
 % close all; 
 % clc;
