@@ -102,31 +102,45 @@ for k=1:N-1
 % % importer les P_values, si
 % % length(P_value) ont des toutes petits values ( seuil à déterminer) alors
 % % on peut dire qu'il y a abscence de P_value et donc par suite si 
+
+ 
+%% detection du % de pic P valable
 P_value_real = P_value( P_value >0);
-nb_p_values = length(P_value);
-nb_p_values_real = length(P_value_real);
+R_value_real = R_value ( R_value >0);
 
-perc_of_p_value = (nb_p_values_real/nb_p_values)*100;
-
-% on peut ainsi determiner le nombre de P_values dans le signal 
-% s'il y en a pas beaucoup , alors l'autre condition pour certifié une AF
-% est validé : 
-% présence d'un AF 
+P_ord = data(P_value_real);
+R_ord = data (R_value_real);
+P_available = zeros();
 
 
+for i=1:length(P_value_real)
+   if (abs(R_ord(i)/P_ord(i))) > 5 && ((R_ord(i)/P_ord(i))) < 400
+       P_available(i) = abs(P_ord(i));
+       frac(i)=abs(R_ord(i)/P_ord(i));
+   else
+       P_available(i) = 0 ;
+       frac(i)=abs(R_ord(i)/P_ord(i));
+   end
+end
+
+P_available_ss_zero = P_available(P_available >0);
+
+nb_p_values = length(P_value_real);
+nb_p_values_real = length(P_available_ss_zero);
+perc_of_p_value_AF = (nb_p_values_real/nb_p_values)*100;
 
  %% Ventricular fibrillation 
-% % absence of traditional P Q R S T waves , 
-% 
-% % import les Q S T values et comparé leur valeur à un seuil pour dire qu'il
-% % y a une abscence de P,Q,R,S,T
-% 
-% 
+% absence of traditional P Q R S T waves , 
+
+% import les Q S T values et comparé leur valeur à un seuil pour dire qu'il
+% y a une abscence de P,Q,R,S,T
+
+
 % % comparaison to a pure sine, with
-% 
+
 % %creation of a pure sine 
 % % f= 240 to 600 bpm 
-% 
+
 N_value = length(data);
 for f=4:10 % bpm 240 to 600
     comparaison_signal = sin(2*pi*f*(0:N_value-1)/Fs); % pure sine
@@ -138,8 +152,10 @@ y=autocorr(comparaison_signal);
   
 %  %determienr une periode d'analyse du signal  pour la parole c'est 10-20
 %  %ms pour 20-20kHz 
+
+
 %% releving interessant part of the signal 
-%   
+  
 partie_entiere = floor(length(data)/2);
 BPM =zeros(1,partie_entiere); % vecteur qui contiendra les bpm pour la fenetre quand elle se décale 
 n=0;
@@ -162,11 +178,11 @@ for m=1:58:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop 
     for p=1:length(data)
         data_value_window(p)= window(p).*data(p); % on recupere seulement les r values de la fenetre 
     end 
-% 
+
 % %% trouver le R pic de data_value_window 
-%
+
     new_vect_window_R = zeros();
-% % % 
+
 % plot(data);
 % hold all; 
 % plot (window);
@@ -178,14 +194,14 @@ for m=1:58:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop 
   
     R_window = new_vect_window_R(new_vect_window_R > 0);
 % % %calcul du bpm window 
-% 
+
     total_ech_nb_window = length(data)/2;
-% 
+
 % % % on a f_ech =200 ech/s
-%  
+ 
     time_of_ech_total_window = total_ech_nb_window/Fs; 
-% 
-% 
+
+
     nb_bat_total_window = length(R_window);
     nb_bat_par_sec_window = length(R_window)/ time_of_ech_total_window; 
     bpm_window = nb_bat_par_sec_window *60; % correct 

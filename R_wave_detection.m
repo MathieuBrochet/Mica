@@ -1,4 +1,4 @@
-function [R_value, Q_value, S_value, P_value, T_value, tresh] = R_wave_detection( data, Fs)
+function [R_value, Q_value, S_value, P_value, T_value,tresh] = R_wave_detection( data, Fs)
 % clear; 
 % close all; 
 % clc;
@@ -92,7 +92,6 @@ p = (h5 > tresh);
 mult = h5.*p;
  
 mult1 = data(1:length(p)).*p;
-
 
 % figure(2);
 % plot(1e11*data);
@@ -209,7 +208,7 @@ for p=2:length(R_value)
             k=k+1;
         end
         j=j-1;
-    end;
+    end
     
     max_ordp = max(data(p_vect(2:length(p_vect))));
     

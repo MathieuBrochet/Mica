@@ -102,7 +102,62 @@ for k=1:N-1
 % % importer les P_values, si
 % % length(P_value) ont des toutes petits values ( seuil à déterminer) alors
 % % on peut dire qu'il y a abscence de P_value et donc par suite si 
-P_value_real = P
+
+ 
+%% detection du % de pic P valable
+
+
+
+P_ord=data(P_value_real);
+R_ord = data (R_value_real);
+% P_value_real = P_value( P_value >0);
+% nb_p_values = length(P_value);
+% nb_p_values_real = length(P_value_real);
+% perc_of_p_value = (nb_p_values_real/nb_p_values)*100;
+
+
+for i=1:length(P_va
+
+% P_value_real = P_value( P_value >0);
+% P_average = 0;
+% for i=1:length(P_value_real)
+%     P_average = P_average + data(P_value_real(i));
+% end 
+% P_average = P_average / length(P_value_real); % calcul de la moyenne en amplitude des pics
+% % P du signal 
+% 
+% % calcul  pour avoir la position du milieux du segments R_R
+% for j=1:length(R_R)    
+%     part(j) = floor(R_R(j)/2);
+% end
+% P_postion_available_int = zeros();
+% w=1;
+% 
+% % moyenne du signal entre le R 
+%  % test pour savoir si le pics P moins le milieu du segment R_R et
+%  % inferieur à la moyenne des pics P, si oui, on el remplace par un zeros
+%  
+% for  j=1:length(P_value_real)
+%     if abs( data(P_value_real(j))) -  abs(data( P_value_real(j) -3) ) < abs(data(P_value_real(j))) 
+%         P_postion_available_int(w) = 0;
+%         w = w+1;
+%     else 
+%         P_postion_available_int(w) = P_value_real(j);
+%         w = w +1;
+%     end
+% end
+% 
+% % on enleve tout les zeros  qui indique les pics P non valable
+% P_available = P_postion_available_int( P_postion_available_int >0);
+% % on calcul le % des P_available / P_value_real
+% nb_p_values = length(P_value_real);
+% nb_p_available = length(P_available);
+% perc_of_p_value = (nb_p_available/nb_p_values)*100; % pourcentage de pic P available
+
+% on peut ainsi determiner le nombre de P_values dans le signal 
+% s'il y en a pas beaucoup , alors l'autre condition pour certifié une AF
+% est validé : 
+% présence d'un AF 
 
 
 
@@ -122,79 +177,77 @@ N_value = length(data);
 for f=4:10 % bpm 240 to 600
     comparaison_signal = sin(2*pi*f*(0:N_value-1)/Fs); % pure sine
 end
-% 
-% 
-% 
+
 % % method de comparaison avec autocov de ecg, et auto cov de sine  
-% 
+
 y=autocorr(comparaison_signal); 
-%   
-%   
+  
 %  %determienr une periode d'analyse du signal  pour la parole c'est 10-20
 %  %ms pour 20-20kHz 
-% 
+
+
 %% releving interessant part of the signal 
 %   
-partie_entiere = floor(length(data)/2);
-BPM =zeros(1,partie_entiere); % vecteur qui contiendra les bpm pour la fenetre quand elle se décale 
-n=0;
-window = zeros(1,length(data));
-for m=1:58:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop long et peu de de variation si on 
-    % décale la fenetre d'un echantilllon 
-% % window 
-% j'ai choisi 58 car diviseur de 149 119 pile poil ( jusqu'ou va m)
-    n = n+58;
-    for k=n:((length(data)/2) + n-1) % je cree ma fenetre en l'augmentant de 1 vers la droite a chaue itt de m
-        window(k) = 1;
-    end
-    for k=1:n
-        window(k) = 0; 
-    end % je met le derniere element de ma fenetre à 0 ( redu
-    % ction à gauche ) comme si elle se déplacer à droite 
-    data_value_window = zeros(length(data),1);
-
-
-    for p=1:length(data)
-        data_value_window(p)= window(p).*data(p); % on recupere seulement les r values de la fenetre 
-    end 
-% 
-% %% trouver le R pic de data_value_window 
-%
-    new_vect_window_R = zeros();
-% % % 
-% plot(data);
-% hold all; 
-% plot (window);
-% plot(data_value_window);
-
-    for k=1:length(R_value)
-        new_vect_window_R(k)=data_value_window(R_value(k)); %contient les pics R sur la fenetre 
-    end
-  
-    R_window = new_vect_window_R(new_vect_window_R > 0);
-% % %calcul du bpm window 
-% 
-    total_ech_nb_window = length(data)/2;
-% 
-% % % on a f_ech =200 ech/s
-%  
-    time_of_ech_total_window = total_ech_nb_window/Fs; 
+% partie_entiere = floor(length(data)/2);
+% BPM =zeros(1,partie_entiere); % vecteur qui contiendra les bpm pour la fenetre quand elle se décale 
+% n=0;
+% window = zeros(1,length(data));
+% for m=1:58:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop long et peu de de variation si on 
+%     % décale la fenetre d'un echantilllon 
+% % % window 
+% % j'ai choisi 58 car diviseur de 149 119 pile poil ( jusqu'ou va m)
+%     n = n+58;
+%     for k=n:((length(data)/2) + n-1) % je cree ma fenetre en l'augmentant de 1 vers la droite a chaue itt de m
+%         window(k) = 1;
+%     end
+%     for k=1:n
+%         window(k) = 0; 
+%     end % je met le derniere element de ma fenetre à 0 ( redu
+%     % ction à gauche ) comme si elle se déplacer à droite 
+%     data_value_window = zeros(length(data),1);
 % 
 % 
-    nb_bat_total_window = length(R_window);
-    nb_bat_par_sec_window = length(R_window)/ time_of_ech_total_window; 
-    bpm_window = nb_bat_par_sec_window *60; % correct 
-    BPM(m) = bpm_window;
-end 
-
-BPM_sans_zero = BPM( BPM >0); % valeur des bpm du signal en entrée pour une porte décalé de 58 à chaque fois 
-
-BPM_average = 0;
-
-for i = 1:length(BPM_sans_zero)
-    BPM_average = BPM_average + BPM_sans_zero(i) ; 
-end
-
-BPM_average = BPM_average / length(BPM_sans_zero); % on calcul la moyenne des bpm du signal fenetré 
-% on devrait retrouver la meme moyenne que bpm 
+%     for p=1:length(data)
+%         data_value_window(p)= window(p).*data(p); % on recupere seulement les r values de la fenetre 
+%     end 
+% % 
+% % %% trouver le R pic de data_value_window 
+% %
+%     new_vect_window_R = zeros();
+% % % % 
+% % plot(data);
+% % hold all; 
+% % plot (window);
+% % plot(data_value_window);
+% 
+%     for k=1:length(R_value)
+%         new_vect_window_R(k)=data_value_window(R_value(k)); %contient les pics R sur la fenetre 
+%     end
+%   
+%     R_window = new_vect_window_R(new_vect_window_R > 0);
+% % % %calcul du bpm window 
+% % 
+%     total_ech_nb_window = length(data)/2;
+% % 
+% % % % on a f_ech =200 ech/s
+% %  
+%     time_of_ech_total_window = total_ech_nb_window/Fs; 
+% % 
+% % 
+%     nb_bat_total_window = length(R_window);
+%     nb_bat_par_sec_window = length(R_window)/ time_of_ech_total_window; 
+%     bpm_window = nb_bat_par_sec_window *60; % correct 
+%     BPM(m) = bpm_window;
+% end 
+% 
+% BPM_sans_zero = BPM( BPM >0); % valeur des bpm du signal en entrée pour une porte décalé de 58 à chaque fois 
+% 
+% BPM_average = 0;
+% 
+% for i = 1:length(BPM_sans_zero)
+%     BPM_average = BPM_average + BPM_sans_zero(i) ; 
+% end
+% 
+% BPM_average = BPM_average / length(BPM_sans_zero); % on calcul la moyenne des bpm du signal fenetré 
+% % on devrait retrouver la meme moyenne que bpm 
 
