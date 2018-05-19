@@ -41,27 +41,12 @@ nb_bat_total = length(R_value);
 nb_bat_par_sec = length(R_value)/ time_of_ech_total; 
 bpm = nb_bat_par_sec *60; % correct 
 % 
-%% Bradycardia 
-% under 60 bpm // bonus : faire un systeme qui note l'importance de la
-% tachycharide en fonction du bpm qui se réduit 
-% 
-% if bpm < R_average 
-%     interface graphique qui le classifie en Bradycardia 
-% end
 
-
-%% Tachycardia 
-% above 100 bpm // bonus faire pareil 
-
-
-if bpm > 100 
-    % interface graphique qui le classifie en Tachycardia
-end
 
 
 %% Ectopic beat 
 % delta(n) - delta(n-1) , cunter_e_beat compte le nombre de ectopic beat
-
+Ectopic_beat=zeros();
 k=1;
 for j=1: length(R_R)-1
     Ect1(j) = abs(R_R(j+1)-R_R(j));
@@ -155,23 +140,23 @@ y=autocorr(comparaison_signal);
 
 
 %% releving interessant part of the signal 
-  
+pas_window=200;
 partie_entiere = floor(length(data)/2);
 BPM =zeros(1,partie_entiere); % vecteur qui contiendra les bpm pour la fenetre quand elle se décale 
 n=0;
 window = zeros(1,length(data));
-for m=1:58:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop long et peu de de variation si on 
+for m=1:pas_window:(length(data)/2) % je calcul la bpm toute es 58 fenetre , sinon trop long et peu de de variation si on 
     % décale la fenetre d'un echantilllon 
 % % window 
 % j'ai choisi 58 car diviseur de 149 119 pile poil ( jusqu'ou va m)
-    n = n+58;
+    n = n+pas_window;
     for k=n:((length(data)/2) + n-1) % je cree ma fenetre en l'augmentant de 1 vers la droite a chaue itt de m
         window(k) = 1;
     end
     for k=1:n
         window(k) = 0; 
-    end % je met le derniere element de ma fenetre à 0 ( redu
-    % ction à gauche ) comme si elle se déplacer à droite 
+    end % je met le derniere element de ma fenetre à 0 (reduction
+    % à gauche ) comme si elle se déplacer à droite 
     data_value_window = zeros(length(data),1);
 
 
@@ -210,7 +195,7 @@ end
 
 BPM_sans_zero = BPM( BPM >0); % valeur des bpm du signal en entrée pour une porte décalé de 58 à chaque fois 
 
-BPM_average = 0;
+BPM_average = 0; %initialisation du vecteur qui contient les bpm de chaque fenetre 
 
 for i = 1:length(BPM_sans_zero)
     BPM_average = BPM_average + BPM_sans_zero(i) ; 
@@ -219,3 +204,24 @@ end
 BPM_average = BPM_average / length(BPM_sans_zero); % on calcul la moyenne des bpm du signal fenetré 
 % on devrait retrouver la meme moyenne que bpm 
 
+%% Bradycardia 
+% under 60 bpm // bonus : faire un systeme qui note l'importance de la
+% tachycharide en fonction du bpm qui se réduit 
+
+cunter_brady = 0;
+for i=1:length(BPM_sans_zero)
+    if bpm < 60
+        cunter_brady= cunter_brady +1;
+    end
+end
+perc_sample_brady = (cunter_brady / length(BPM_sans_zero))*100;
+%% Tachycardia 
+% above 100 bpm // bonus faire pareil 
+cunter_tachy = 0 ;
+for i=1:length(BPM_sans_zero)
+    if BPM_sans_zero(i) > 100 
+        cunter_tachy = cunter_tachy +1;
+    end
+end
+
+perc_sample_tachy = (cunter_tachy / length(BPM_sans_zero))*100;
