@@ -64,7 +64,7 @@ try
     image(img);
 catch
     textLabel = sprintf('Error');
-    set(handles.text_main, 'String', textLabel);
+    set(handles.display_error, 'String', textLabel);
 end
 
 % UIWAIT makes diagnostic_signal wait for user response (see UIRESUME)
@@ -166,6 +166,10 @@ function push_auto_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %  handles.gamma  = str2func(gamma); 
 %  handles.time_axis = (1:handles.N)/handles.Fs;
+[file,path] = uigetfile('*.mat', 'rt');
+signal = load(fullfile(path, file));
+handles.data = signal.ecg;
+handles.Fs = signal.Fs;
 [bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs)
 try
     figure(1);
