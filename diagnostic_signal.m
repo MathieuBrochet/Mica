@@ -22,7 +22,7 @@ function varargout = diagnostic_signal(varargin)
 
 % Edit the above text to modify the response to help diagnostic_signal
 
-% Last Modified by GUIDE v2.5 22-May-2018 10:21:59
+% Last Modified by GUIDE v2.5 22-May-2018 14:48:06
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -102,17 +102,30 @@ try
     % Brady % 
     brady_display = sprintf('%f',perc_sample_brady);
     set(handles.brady_result, 'String', brady_display);
-
+     if perc_sample_brady > 50
+        text1 = sprintf('Warning : Bradycardia Risks. ');
+        set(handles.display_error,'String',text1);
+    end
 
     % Tachy % 
     tachy_display = sprintf('%f', perc_sample_tachy);
     set(handles.tachy_result, 'String', tachy_display);
-
+    if perc_sample_tachy > 50
+        text2 = sprintf('Warning : Tachycardia Risks. ');
+        set(handles.display_error,'String',text2);
+    end
 
     % Ectopic % 
     ectopic_display = sprintf('%f', percent_of_extopic_beat);
     set(handles.ectopic_result, 'String', ectopic_display);
-
+     if percent_of_extopic_beat >= 25 && percent_of_extopic_beat<50
+        text2 = sprintf(' Warning : between 25 and  50 % anomaly peaks ');
+        set(handles.display_error,'String',text2);
+     end
+     if percent_of_extopic_beat >= 50
+        text3 = sprintf('Warning : more than 50% anomaly peaks');
+        set(handles.display_error,'String',text3);
+     end
 
     % BPM 
 
@@ -122,11 +135,23 @@ try
     % P_value % 
     p_value_display = sprintf('%f ',perc_of_p_value_AF );
     set(handles.p_peaks_result, 'String', p_value_display);
+    if perc_of_p_value_AF < 30 
+        if perc_sample_tachy >50
+            text = sprintf(' Warning : Arterial Fibrillation & Tachycardia Risks.  ');
+            set(handles.display_error,'String',text);
+        else
+            text = sprintf(' Warning : Arterial Fibrillation Risks.  ');
+            set(handles.display_error,'String',text);
+            
+            
+        end
+    end
 catch
-     textLabel = sprintf('Error !');
+     textLabel = sprintf('Error.');
      set(handles.display_error, 'String', textLabel);
 end
 
 
 
 guidata(hObject, handles);
+function figure1_CreateFcn(hObject, eventdata,handles)

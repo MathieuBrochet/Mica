@@ -22,7 +22,7 @@ function varargout = diagnostic_signal(varargin)
 
 % Edit the above text to modify the response to help diagnostic_signal
 
-% Last Modified by GUIDE v2.5 22-May-2018 08:21:54
+% Last Modified by GUIDE v2.5 22-May-2018 10:21:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,77 +73,77 @@ end
 
 % --- Outputs from this function are returned to the command line.
 function varargout = diagnostic_signal_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Get default command line output from handles structure
+% % varargout  cell array for returning output args (see VARARGOUT);
+% % hObject    handle to figure
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-function plot_parameters_Callback(hObject, eventdata, handles)
-[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologie_detection( data, Fs)
-% Brady % 
-brady_display = sprintf('%f bpm',perc_sample_brady);
-set(handles.brady_result, 'String', brady_display);
 
+% --- Executes on button press in push.
+function push_Callback(hObject, eventdata, handles)
 
-% Tachy % 
-tachy_display = sprintf('%f bpm', perc_sample_tachy);
-set(handles.tachy_result, 'String', tachy_display);
-
-
-% Ectopic % 
-ectopic_display = sprintf('%f bpm', percent_of_extopic_beat);
-set(handles.ectopic_result, 'String', ectopic_display);
-
-
-% BPM 
-
-bpm_display = sprintf('%f bpm', bpm);
-set(handles.bpm_result, 'String', bpm_display);
-
-% P_value % 
-p_value_display = sprintf('%f bpm',perc_of_p_value_AF );
-set(handles.p_peaks_result, 'String', p_value_display);
-
-
-guidata(hObject, handles);
-
-function window_init_Callback(hObject, eventdata, handles)
-% hObject    handle to window_init (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+[file,path] = uigetfile('*.mat', 'rt');
+signal = load(fullfile(path, file));
+handles.data = signal.ecg;
+handles.Fs = signal.Fs;
+handles.N = size(handles.data,2);
+handles.time_axis = (1:handles.N)/handles.Fs;
+plot(handles.time_axis, handles.data); grid on;
+xlabel('Time (s)');
+ylabel('Magnitude');
+textLabel = sprintf('Time evolution of the loaded signal');
+set(handles.display_error, 'String', textLabel);
 
 try
-    plot(handles.time_axis, handles.data); grid on;
-    xlabel('Time (s)');
-    ylabel('Magnitude');
-    textLabel = sprintf('Time evolution of the loaded signal');
-    set(handles.error_signal, 'String', textLabel);
+[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologies_detection( handles.data, handles.Fs)
+    % Brady % 
+    brady_display = sprintf('%f',perc_sample_brady);
+    set(handles.brady_result, 'String', brady_display);
+     if perc_sample_brady > 50
+        text1 = sprintf(' Bradycardia Risk. ');
+        set(handles.display_error,'String',text1);
+    end
+
+    % Tachy % 
+    tachy_display = sprintf('%f', perc_sample_tachy);
+    set(handles.tachy_result, 'String', tachy_display);
+    if perc_sample_tachy > 50
+        text2 = sprintf(' Tachycardia Risk. ');
+        set(handles.display_error,'String',text2);
+    end
+
+    % Ectopic % 
+    ectopic_display = sprintf('%f', percent_of_extopic_beat);
+    set(handles.ectopic_result, 'String', ectopic_display);
+     if percent_of_extopic_beat >= 25 && percent_of_extopic_beat<50
+        text2 = sprintf(' Warning : between 25 and  50 % of anomalia peaks ');
+        set(handles.display_error,'String',text2);
+     end
+     if percent_of_extopic_beat >= 50
+        text3 = sprintf('Warning : death risks');
+        set(handles.display_error,'String',text3);
+     end
+
+    % BPM 
+
+    bpm_display = sprintf('%f ', bpm);
+    set(handles.bpm_result, 'String', bpm_display);
+
+    % P_value % 
+    p_value_display = sprintf('%f ',perc_of_p_value_AF );
+    set(handles.p_peaks_result, 'String', p_value_display);
+    if perc_of_p_value_AF < 30 
+        text = sprintf(' AF Risk !! ');
+        set(handles.display_error,'String',text);
+    end
 catch
-    textLabel = sprintf('Error ');
-    set(handles.error_signal, 'String', textLabel);
+     textLabel = sprintf('Error !');
+     set(handles.display_error, 'String', textLabel);
 end
 
-
-function file_Callback(hObject, eventdata, handles)
-% hObject    handle to file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-function diagnostic_signal_Callback(hObject, eventdata, handles)
-% 
-% [file,path] = uigetfile('*.mat', 'rt');
-% signal = load(fullfile(path, file));
-% 
-% handles.data = signal.ecg;
-% handles.time_axis = (1:handles.N)/handles.Fs;
-% plot(handles.time_axis, handles.data); grid on;
-% xlabel('Time (s)');
-% ylabel('Magnitude');
-% textLabel = sprintf('Time evolution of the loaded signal');
-% set(handles.display_error, 'String', textLabel);
 
 
 guidata(hObject, handles);
