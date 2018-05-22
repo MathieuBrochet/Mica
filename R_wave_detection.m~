@@ -1,12 +1,3 @@
-
-% R_wave_detection.m : 
-    % filter between pass-band filter and detection of maxima
-    % detection of R_value
-    % detection of P & T value
-    % detection of Q & S value
-    % displaying all signal during the fitrage
-
-
 function [R_value, Q_value, S_value, P_value, T_value,tresh] = R_wave_detection( data, Fs)
 %% Band pass filter 
 %% creation of low pass filter 
@@ -201,7 +192,7 @@ end
 %xlabel('Time');
 %ylabel('Amplitude of h5 and 10^13*p');
 
-%display g1 (first filter of P & T detection method) with the data
+%display g1 (first filter of P & T with the data
 
 % figure(6);
 % plot(data);
@@ -212,16 +203,11 @@ end
 %ylabel('Amplitude of g1 and data');
 
 
-%display g2 (second filter of P & T detection method) with the data
-
 % figure(7);
 % plot(data);
 % hold all; 
 % plot(g2);
 % grid on; 
-%title('Superposition of g2 and data');
-%xlabel('Time');
-%ylabel('Amplitude of g2 and data');
 
 
-end % the function enable to have access to variable that we needs in pathologies_detection.m
+end
