@@ -1,25 +1,18 @@
+function [bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologies_detection( data, Fs)
 
-clear; 
-close all; 
-clc;
 
 
 %% Load a signal
 
 
-[file,path] = uigetfile('*.mat', 'rt');
-signal = load(fullfile(path, file));
-data = signal.ecg; % Your ecg data
-Fs = signal.Fs; % Sampling frequency
-N = size(data,2); % Data length
-time_axis = (1:N)/Fs;
+
 [R_value, Q_value, S_value, P_value, T_value] = R_wave_detection( data, Fs); % récupération des valeurs PQRST précédentes
 
 
 
 %% Rythm cardiac
 
-function [bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologie_detection( data, Fs)
+
 delay = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0  0 1]; 
 data = conv(delay,data);
 % obligé de remettre le delais car 
