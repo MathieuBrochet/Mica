@@ -19,7 +19,7 @@ time_axis = (1:N)/Fs;
 
 %% Rythm cardiac
 
-
+function [bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologie_detection( data, Fs)
 delay = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0  0 1]; 
 data = conv(delay,data);
 % obligé de remettre le delais car 
@@ -225,3 +225,4 @@ for i=1:length(BPM_sans_zero)
 end
 
 perc_sample_tachy = (cunter_tachy / length(BPM_sans_zero))*100;
+end
