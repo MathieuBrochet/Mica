@@ -120,8 +120,18 @@ try
     ectopic_display = sprintf('%f', percent_of_extopic_beat);
     set(handles.ectopic_result, 'String', ectopic_display);
      if percent_of_extopic_beat >= 25 
-        text2 = sprintf(' Warning : significative ectopics beat ');
-        set(handles.display_error,'String',text2);
+         if perc_sample_tachy > 50
+             if perc_of_p_value_AF < 50
+                text4 = sprintf(' Warning : ectopics beat, Tachycardia Risks, and low number of P peaks, check the autocov.');
+                set(handles.display_error,'String',text4);
+             else
+                text3 = sprintf(' Warning : ectopics beat  && Tachycardia Risks.');
+                set(handles.display_error,'String',text3);
+             end
+         else
+            text2 = sprintf(' Warning : significative ectopics beat ');
+            set(handles.display_error,'String',text2);
+         end
      end
 
     % BPM 
@@ -161,15 +171,13 @@ function push_auto_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %  handles.gamma  = str2func(gamma); 
 %  handles.time_axis = (1:handles.N)/handles.Fs;
-[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs)
+[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs);
 try
     figure(1);
     plot(gamma);
     xlabel('data');
     ylabel('autocovariance');
     title('If a dirac happen, there is an Atrial Fibrillation.');
-    
-    
 catch
      textLabel = sprintf('Error.');
      set(handles.display_error, 'String', textLabel);
