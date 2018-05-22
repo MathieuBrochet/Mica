@@ -22,7 +22,7 @@ function varargout = diagnostic_signal(varargin)
 
 % Edit the above text to modify the response to help diagnostic_signal
 
-% Last Modified by GUIDE v2.5 22-May-2018 14:48:06
+% Last Modified by GUIDE v2.5 22-May-2018 15:47:26
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -89,6 +89,7 @@ function push_Callback(hObject, eventdata, handles)
 signal = load(fullfile(path, file));
 handles.data = signal.ecg;
 handles.Fs = signal.Fs;
+
 handles.N = size(handles.data,2);
 handles.time_axis = (1:handles.N)/handles.Fs;
 plot(handles.time_axis, handles.data); grid on;
@@ -98,8 +99,9 @@ textLabel = sprintf('Time evolution of the loaded signal');
 set(handles.display_error, 'String', textLabel);
 
 try
-[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat] = pathologies_detection( handles.data, handles.Fs)
+[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs)
     % Brady % 
+  
     brady_display = sprintf('%f',perc_sample_brady);
     set(handles.brady_result, 'String', brady_display);
      if perc_sample_brady > 50
@@ -137,7 +139,7 @@ try
     set(handles.p_peaks_result, 'String', p_value_display);
     if perc_of_p_value_AF < 30 
         if perc_sample_tachy >50
-            text = sprintf(' Warning : Arterial Fibrillation & Tachycardia Risks.  ');
+            text = sprintf(' Warning : Atrial Fibrillation & Tachycardia Risks. Check AutoCov  ');
             set(handles.display_error,'String',text);
         else
             text = sprintf(' Warning : Arterial Fibrillation Risks.  ');
@@ -155,3 +157,26 @@ end
 
 guidata(hObject, handles);
 function figure1_CreateFcn(hObject, eventdata,handles)
+
+
+% --- Executes on button press in push_auto.
+function push_auto_Callback(hObject, eventdata, handles)
+% hObject    handle to push_auto (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+%  handles.gamma  = str2func(gamma); 
+%  handles.time_axis = (1:handles.N)/handles.Fs;
+[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs)
+try
+    figure(1);
+    plot(gamma);
+    xlabel('data');
+    ylabel('autocovariance');
+    title('if a dirac happen, there is an AF');
+    
+    
+catch
+     textLabel = sprintf('Error.');
+     set(handles.display_error, 'String', textLabel);
+end
+guidata(hObject, handles);
