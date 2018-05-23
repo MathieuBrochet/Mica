@@ -89,13 +89,12 @@ function push_Callback(hObject, eventdata, handles)
 signal = load(fullfile(path, file));
 handles.data = signal.ecg;
 handles.Fs = signal.Fs;
-
 handles.N = size(handles.data,2);
 handles.time_axis = (1:handles.N)/handles.Fs;
 plot(handles.time_axis, handles.data); grid on;
 xlabel('Time (s)');
 ylabel('Magnitude');
-textLabel = sprintf('Time evolution of the loaded signal');
+textLabel = sprintf('The electrocardiogram seems good.');
 set(handles.display_error, 'String', textLabel);
 
 try
@@ -120,13 +119,19 @@ try
     % Ectopic % 
     ectopic_display = sprintf('%f', percent_of_extopic_beat);
     set(handles.ectopic_result, 'String', ectopic_display);
-     if percent_of_extopic_beat >= 25 && percent_of_extopic_beat<50
-        text2 = sprintf(' Warning : between 25 and  50 % anomaly peaks ');
-        set(handles.display_error,'String',text2);
-     end
-     if percent_of_extopic_beat >= 50
-        text3 = sprintf('Warning : more than 50% anomaly peaks');
-        set(handles.display_error,'String',text3);
+     if percent_of_extopic_beat >= 25 
+         if perc_sample_tachy > 50
+             if perc_of_p_value_AF < 50
+                text4 = sprintf(' Warning : ectopics beat, Tachycardia Risks, and low number of P peaks, check the autocov.');
+                set(handles.display_error,'String',text4);
+             else
+                text3 = sprintf(' Warning : ectopics beat  && Tachycardia Risks.');
+                set(handles.display_error,'String',text3);
+             end
+         else
+            text2 = sprintf(' Warning : significative ectopics beat ');
+            set(handles.display_error,'String',text2);
+         end
      end
 
     % BPM 
@@ -166,19 +171,21 @@ function push_auto_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %  handles.gamma  = str2func(gamma); 
 %  handles.time_axis = (1:handles.N)/handles.Fs;
+<<<<<<< HEAD
 [file,path] = uigetfile('*.mat', 'rt');
 signal = load(fullfile(path, file));
 handles.data = signal.ecg;
 handles.Fs = signal.Fs;
 [bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs)
+=======
+[bpm,perc_of_p_value_AF,perc_sample_brady,perc_sample_tachy,percent_of_extopic_beat,gamma] = pathologies_detection( handles.data, handles.Fs);
+>>>>>>> master
 try
     figure(1);
     plot(gamma);
     xlabel('data');
     ylabel('autocovariance');
-    title('if a dirac happen, there is an AF');
-    
-    
+    title('If a dirac happen, there is an Atrial Fibrillation.');
 catch
      textLabel = sprintf('Error.');
      set(handles.display_error, 'String', textLabel);
